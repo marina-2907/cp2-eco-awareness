@@ -1,0 +1,338 @@
+/* =============================================
+   ECO-AWARENESS 2026 | Cashback Progressivo
+   ============================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --verde: #00ff88;
+    --verde-escuro: #00cc6a;
+    --fundo: #0d0d0d;
+    --fundo-card: #151515;
+    --fundo-card2: #1a1a1a;
+    --borda: #2a2a2a;
+    --texto: #e0e0e0;
+    --texto-fraco: #888;
+    --fonte-mono: 'Space Mono', monospace;
+    --fonte-body: 'DM Sans', sans-serif;
+}
+
+body {
+    background-color: var(--fundo);
+    color: var(--texto);
+    font-family: var(--fonte-body);
+    min-height: 100vh;
+    padding: 40px 16px;
+}
+
+.page-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 720px;
+}
+
+/* BADGE */
+.badge {
+    display: inline-block;
+    background-color: var(--verde);
+    color: #000;
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* TÍTULO */
+.titulo {
+    font-family: var(--fonte-body);
+    font-size: 42px;
+    font-weight: 600;
+    color: var(--verde);
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+
+.subtitulo {
+    font-size: 15px;
+    color: var(--texto-fraco);
+    margin-bottom: 32px;
+}
+
+/* CARDS */
+.card-contexto,
+.card-regras {
+    background-color: var(--fundo-card);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.card-contexto {
+    border-left: 4px solid var(--verde);
+}
+
+.card-titulo {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ccc;
+    margin-bottom: 14px;
+    letter-spacing: 0.3px;
+}
+
+.card-titulo.verde {
+    color: var(--verde);
+}
+
+.citacao {
+    font-style: italic;
+    color: var(--texto-fraco);
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.card-contexto p {
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.card-contexto em {
+    color: var(--verde);
+    font-style: normal;
+    font-weight: 600;
+}
+
+.card-regras ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card-regras ul li {
+    font-size: 14px;
+    color: #bbb;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.card-regras ul li::before {
+    content: "•";
+    color: var(--verde);
+    position: absolute;
+    left: 0;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.card-regras strong {
+    color: var(--texto);
+}
+
+.card-regras code {
+    background: #222;
+    color: var(--verde);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: var(--fonte-mono);
+    font-size: 12px;
+}
+
+/* FORMULÁRIO */
+.form-section {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-label {
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--texto-fraco);
+    text-transform: uppercase;
+}
+
+.form-input {
+    background-color: var(--fundo-card2);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    color: var(--texto);
+    font-family: var(--fonte-body);
+    font-size: 15px;
+    padding: 14px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+.form-input::placeholder {
+    color: #444;
+}
+
+.form-input:focus {
+    border-color: var(--verde);
+}
+
+/* BOTÃO */
+.btn-distribuir {
+    background-color: var(--verde);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--fonte-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    text-transform: uppercase;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.btn-distribuir:hover {
+    background-color: var(--verde-escuro);
+}
+
+.btn-distribuir:active {
+    transform: scale(0.98);
+}
+
+/* RESULTADO */
+.resultado {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.mensagem-status {
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.mensagem-status.processando {
+    background: #1a1a00;
+    border: 1px solid #444400;
+    color: #ffdd00;
+}
+
+.mensagem-status.sucesso {
+    background: #001a0d;
+    border: 1px solid var(--verde);
+    color: var(--verde);
+}
+
+.mensagem-status.erro {
+    background: #1a0000;
+    border: 1px solid #ff4444;
+    color: #ff6666;
+}
+
+.secao-titulo {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ccc;
+    margin-bottom: 14px;
+}
+
+/* TABELA */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--borda);
+}
+
+.tabela {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.tabela thead {
+    background-color: #1e1e1e;
+}
+
+.tabela th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--fonte-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--texto-fraco);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--borda);
+}
+
+.tabela td {
+    padding: 12px 16px;
+    color: #ccc;
+    border-bottom: 1px solid #1e1e1e;
+}
+
+.tabela tr:last-child td {
+    border-bottom: none;
+}
+
+.tabela tr:hover td {
+    background-color: #1a1a1a;
+}
+
+.valor-cashback {
+    color: var(--verde);
+    font-family: var(--fonte-mono);
+    font-weight: 700;
+}
+
+/* BADGE INGRESSO */
+.badge-ingresso {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: var(--fonte-mono);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.badge-ingresso.vip {
+    background: #2a1a00;
+    color: #ffaa00;
+    border: 1px solid #ffaa0044;
+}
+
+.badge-ingresso.standard {
+    background: #001a1a;
+    color: #00cccc;
+    border: 1px solid #00cccc44;
+}
+
+.badge-ingresso.student {
+    background: #1a001a;
+    color: #cc88ff;
+    border: 1px solid #cc88ff44;
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Awareness 2026 | Cashback Progressivo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="container">
+
+            <div class="badge">FIDELIDADE &amp; BÔNUS</div>
+
+            <h1 class="titulo">Eco-Awareness 2026</h1>
+            <p class="subtitulo">Programa de Cashback Progressivo</p>
+
+            <div class="card-contexto">
+                <h2 class="card-titulo">Contexto do Desafio (Estória)</h2>
+                <p class="citacao">"Como analista financeiro de engajamento do Eco-Awareness..."</p>
+                <p>Sustentabilidade também requer recompensas consistentes a longo prazo. No encerramento do Eco-Awareness, a diretoria anunciou o inovador programa <em>"Cashback Progressivo"</em> para manter nossa comunidade altamente engajada de forma contínua.</p>
+                <p>A lógica de premiação financeira devolvida ao saldo do participante agora é escalável: usuários ativistas exemplares que já possuem múltiplas presenças são recompensados com incríveis 25% do valor da taxa anterior. Quem investiu no passe VIP garante 20%, e os demais ganham a taxa piso. É sua tarefa construir a inteligência e orquestrar esta distribuição massiva de estornos diretamente nos saldos virtuais usando o rigor transacional de um cursor explícito.</p>
+            </div>
+
+            <div class="card-regras">
+                <h2 class="card-titulo verde">Regras de Negócio</h2>
+                <ul>
+                    <li>Utilizar <strong>Cursor Explícito</strong> para os participantes com status <code>PRESENT</code>.</li>
+                    <li>Realizar uma contagem (subquery) de presenças totais do usuário dentro do loop.</li>
+                    <li><strong>Escalonamento:</strong> 25% (&gt;3 presenças), 20% (Ingresso VIP), 10% (Demais).</li>
+                    <li>Atualizar o <strong>SALDO</strong> do usuário na tabela <code>USUARIOS</code>.</li>
+                </ul>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">ID DO EVENTO FINALIZADO</label>
+                <input type="number" id="idEvento" class="form-input" placeholder="Ex: 3" min="1">
+                <button class="btn-distribuir" onclick="distribuir()">
+                    DISTRIBUIR CRÉDITOS DE CASHBACK
+                </button>
+            </div>
+
+            <div id="resultado" class="resultado hidden">
+                <div id="mensagem-status" class="mensagem-status"></div>
+
+                <div id="secao-logs" class="hidden">
+                    <h3 class="secao-titulo"> Log de Cashback</h3>
+                    <div class="table-wrapper">
+                        <table class="tabela">
+                            <thead>
+                                <tr>
+                                    <th>Usuário ID</th>
+                                    <th>Ingresso</th>
+                                    <th>Presenças</th>
+                                    <th>Percentual</th>
+                                    <th>Cashback</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-logs"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="secao-saldos" class="hidden">
+                    <h3 class="secao-titulo"> Saldos Atualizados</h3>
+                    <div class="table-wrapper">
+                        <table class="tabela">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-saldos"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function distribuir() {
+            const idEvento = document.getElementById("idEvento").value;
+            const resultado = document.getElementById("resultado");
+            const mensagem = document.getElementById("mensagem-status");
+
+            if (!idEvento) {
+                alert("Informe o ID do evento!");
+                return;
+            }
+
+            mensagem.innerHTML = "Processando...";
+            mensagem.className = "mensagem-status processando";
+            resultado.classList.remove("hidden");
+            document.getElementById("secao-logs").classList.add("hidden");
+            document.getElementById("secao-saldos").classList.add("hidden");
+
+            try {
+                const resp = await fetch("/distribuir", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ id_evento: idEvento })
+                });
+                const data = await resp.json();
+
+                if (data.erro) {
+                    mensagem.innerHTML = "Erro: " + data.erro;
+                    mensagem.className = "mensagem-status erro";
+                    return;
+                }
+
+                mensagem.innerHTML = "Cashback distribuído com sucesso para o evento " + idEvento + "!";
+                mensagem.className = "mensagem-status sucesso";
+
+                // Preenche logs
+                const tbodyLogs = document.getElementById("tbody-logs");
+                tbodyLogs.innerHTML = "";
+                data.logs.forEach(l => {
+                    tbodyLogs.innerHTML += `
+                        <tr>
+                            <td>${l.id_usuario}</td>
+                            <td><span class="badge-ingresso ${l.tipo_ingresso.toLowerCase()}">${l.tipo_ingresso}</span></td>
+                            <td>${l.total_presencas}</td>
+                            <td>${l.percentual.toFixed(0)}%</td>
+                            <td class="valor-cashback">R$ ${l.cashback.toFixed(2)}</td>
+                        </tr>`;
+                });
+                document.getElementById("secao-logs").classList.remove("hidden");
+
+                // Preenche saldos
+                const tbodySaldos = document.getElementById("tbody-saldos");
+                tbodySaldos.innerHTML = "";
+                data.usuarios.forEach(u => {
+                    tbodySaldos.innerHTML += `
+                        <tr>
+                            <td>${u.id}</td>
+                            <td>${u.nome}</td>
+                            <td class="valor-cashback">R$ ${u.saldo.toFixed(2)}</td>
+                        </tr>`;
+                });
+                document.getElementById("secao-saldos").classList.remove("hidden");
+
+            } catch (err) {
+                mensagem.innerHTML = "Erro de conexão: " + err.message;
+                mensagem.className = "mensagem-status erro";
+            }
+        }
+    </script>
+</body>
+</html>
